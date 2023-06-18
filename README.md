@@ -1,5 +1,7 @@
 請用 java17 執行
 
+此案例是基於單個 DB/Redis實例做測試
+
 運行多實例 :  
 java -jar oversold-demo-0.0.1-SNAPSHOT.jar --server.port=8081  
 java -jar oversold-demo-0.0.1-SNAPSHOT.jar --server.port=8082
@@ -85,7 +87,8 @@ INSERT INTO product(`name`,`amount`) VALUES ('A',100);
         return new BuyProductResDto("購買失敗!", false);
     }
 ```
-
+Redis後緒需額外將訂單資訊持久化(存到DB)
+持久化當下，若redis的訂單仍有在加減，應直接使用悲觀鎖，確保資料正確性。
 
 跑完可以查詢 purchase_record table;  
 確認票券數量是否正確，有無超賣問題。
