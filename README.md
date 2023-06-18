@@ -70,14 +70,17 @@ INSERT INTO product(`name`,`amount`) VALUES ('A',100);
 下單邏輯:
 ```roomsql
     public BuyProductResDto orderProduct(BuyProductReqDto request) {
+        Long productId = request.getProductId();
         ValueOperations<String, Object> valueOps = redisTemplate.opsForValue();
-        if (valueOps.decrement("k1") >= 0) {
-            String userQTKey = String.format(USER_ORDER_QT_KEY, request.getUserId());
-            Boolean userWasOrdered = valueOps.setIfAbsent(userQTKey, request.getAmount());
+        String userQtKey = String.format(USER_ORDER_QT_KEY, productId, request.getUserId());
+        if (valueOps.decrement(String.format(STOCK_KEY, productId)) >= 0) {
+            Boolean userWasOrdered = valueOps.setIfAbsent(userQtKey, request.getAmount());
             if (!userWasOrdered) {
-                valueOps.increment(userQTKey, request.getAmount());
+                valueOps.increment(userQtKey, request.getAmount());
             }
             return new BuyProductResDto("購買成功!", true);
+        } else {
+            valueOps.increment(userQtKey);
         }
         return new BuyProductResDto("購買失敗!", false);
     }
