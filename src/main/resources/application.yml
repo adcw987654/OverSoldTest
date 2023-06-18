@@ -1,0 +1,22 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/test
+    username: user
+    password: P@ssw0rd
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  redis:
+      host: localhost
+      port: 6379
+      #Redis 數據庫索引 (默認為0)
+      database: 0
+      timeout: 18000000
+      lettuce:
+        pool:
+          #最大連接數(負值代表沒有限制)
+          max-active: 20
+          #最大阻塞等待時間(負值代表沒有限制)
+          max-wait: -1
+          #連接池中最大空閒時間
+          max-idle: 5
+          #連接池中的最小空閒時間
+          min-idle: 0
